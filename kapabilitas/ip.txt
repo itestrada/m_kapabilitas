@@ -1,0 +1,58 @@
+DROP TRIGGER IF EXISTS `bu_tickets`;
+
+DELIMITER $$
+
+CREATE TRIGGER `bu_tickets` 
+BEFORE UPDATE ON `tm_tickets` 
+FOR EACH ROW 
+BEGIN 
+IF NEW.s<>OLD.s AND NEW.s='solved' THEN 
+	SET NEW.solved=NOW(); 
+END IF; 
+IF NEW.s<>OLD.s AND NEW.s='closed' THEN 
+	SET NEW.closed=NOW(); 
+END IF;
+IF (NEW.s<>OLD.s AND (NEW.s='solved' OR NEW.s='open')) OR NEW.s='new' THEN
+	SET NEW.o='1';
+END IF;
+END;
+
+$$
+
+DELIMITER ;
+
+DROP TABLE IF EXISTS `tm_ips`;
+
+CREATE TABLE `tm_ips` (
+  `rowid` int(11) NOT NULL,
+  `oid` varchar(20) NOT NULL,
+  `sid` varchar(20) NOT NULL,
+  `layanan` varchar(20) NOT NULL,
+  `iplan` varchar(20) NOT NULL,
+  `ipwan` varchar(20) NOT NULL,
+  `lastupd` datetime NOT NULL,
+  `updby` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tm_ips`
+--
+ALTER TABLE `tm_ips`
+  ADD PRIMARY KEY (`rowid`),
+  ADD UNIQUE KEY `sid` (`sid`),
+  ADD UNIQUE `oid_layanan` (`oid`, `layanan`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tm_ips`
+--
+ALTER TABLE `tm_ips`
+  MODIFY `rowid` int(11) NOT NULL AUTO_INCREMENT;
+

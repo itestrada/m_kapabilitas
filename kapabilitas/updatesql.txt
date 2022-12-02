@@ -1,0 +1,58 @@
+
+
+DROP TRIGGER IF EXISTS `ai_notes`;
+CREATE TRIGGER `ai_notes` AFTER INSERT ON `tm_notes` FOR EACH ROW UPDATE tm_tickets SET o='0', lastupd=NOW(), updby=NEW.updby WHERE ticketno=NEW.ticketid
+
+
+ALTER TABLE `tm_tickets` CHANGE `o` `o` VARCHAR(1)  NOT NULL DEFAULT '1',  
+CHANGE `s` `s` VARCHAR(20)  NOT NULL DEFAULT 'new',
+CHANGE `grp` `grp` VARCHAR(20) NOT NULL DEFAULT 'link',
+CHANGE `dt` `dt` DATETIME NOT NULL,
+CHANGE `solved` `solved` DATETIME NULL DEFAULT NULL,
+CHANGE `closed` `closed` DATETIME NULL DEFAULT NULL,
+CHANGE `jp` `jp` VARCHAR(250) NOT NULL DEFAULT '',
+ADD `st` VARCHAR(20) NOT NULL DEFAULT '' AFTER `typ`,
+ADD `i` VARCHAR(20) NOT NULL DEFAULT '' AFTER `d`;
+
+ALTER TABLE `tm_notes` ADD `s` VARCHAR(20) NOT NULL DEFAULT '' AFTER `notes`;
+
+
+CREATE TABLE `tm_outlets` (
+  `rowid` int(11) NOT NULL,
+  `oid` varchar(20) NOT NULL,
+  `oname` varchar(50) NOT NULL,
+  `cabang` varchar(50) NOT NULL,
+  `kanwil` varchar(20) NOT NULL,
+  `area` varchar(50) NOT NULL,
+  `ipwan` varchar(20) NOT NULL,
+  `iplan` varchar(20) NOT NULL,
+  `sid` varchar(30) NOT NULL,
+  `pic` varchar(100) NOT NULL,
+  `pic2` varchar(100) NOT NULL,
+  `contact` varchar(100) NOT NULL,
+  `contact2` varchar(100) NOT NULL,
+  `lastupd` datetime NOT NULL,
+  `updby` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tm_outlets`
+--
+ALTER TABLE `tm_outlets`
+  ADD PRIMARY KEY (`rowid`),
+  ADD UNIQUE KEY `oid` (`oid`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tm_outlets`
+--
+ALTER TABLE `tm_outlets`
+  MODIFY `rowid` int(11) NOT NULL AUTO_INCREMENT;
+
